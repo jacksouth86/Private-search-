@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bazaraki Private Real Estate Finder</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .app {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    max-width: 480px;
+    width: 100%;
+    padding: 32px;
+  }
+  h1 { margin: 0 0 8px; font-size: 24px; color: #1a1a1a; }
+  .subtitle { color: #666; margin-bottom: 24px; font-size: 15px; }
+  label { display: block; margin: 16px 0 6px; font-weight: 600; font-size: 14px; color: #333; }
+  select, input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  button {
+    width: 100%;
+    margin-top: 24px;
+    padding: 14px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { background: #1557b0; }
+  .tip {
+    margin-top: 20px;
+    padding: 12px;
+    background: #f0f7ff;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+  }
+  .links { margin-top: 16px; font-size: 13px; }
+  .links a { color: #1a73e8; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>🏠 Private Real Estate Finder</h1>
+  <p class="subtitle">Search Bazaraki for private sellers only (no agencies)</p>
+
+  <form id="form">
+    <label>For Sale or Rent</label>
+    <select id="type">
+      <option value="sale">For Sale</option>
+      <option value="rent">For Rent</option>
+    </select>
+
+    <label>City</label>
+    <select id="city">
+      <option value="">All Cyprus</option>
+      <option value="nicosia">Nicosia</option>
+      <option value="limassol">Limassol</option>
+      <option value="larnaca">Larnaca</option>
+      <option value="paphos">Paphos</option>
+      <option value="famagusta">Famagusta</option>
+    </select>
+
+    <label>Min Price (€)</label>
+    <input type="number" id="min" placeholder="Optional" min="0">
+
+    <label>Max Price (€)</label>
+    <input type="number" id="max" placeholder="Optional" min="0">
+
+    <button type="submit">Open Private Search</button>
+  </form>
+
+  <div class="tip">
+    <strong>One-time setup for best results:</strong><br>
+    1. Install the free <a href="https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" target="_blank">Tampermonkey</a> extension.<br>
+    2. Install the userscript below (it auto-hides business listings).<br>
+    3. On Bazaraki, also select the site’s <em>Private</em> filter if you see it.
+  </div>
+
+  <div class="links">
+    <a href="bazaraki-private-filter.user.js" download>Download userscript</a> · 
+    <a href="https://www.bazaraki.com/real-estate-for-sale/" target="_blank">Bazaraki Sale</a> · 
+    <a href="https://www.bazaraki.com/real-estate-to-rent/" target="_blank">Bazaraki Rent</a>
+  </div>
+</div>
+
+<script>
+document.getElementById('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const type = document.getElementById('type').value;
+  const city = document.getElementById('city').value;
+  const min = document.getElementById('min').value;
+  const max = document.getElementById('max').value;
+
+  let path = type === 'sale' ? '/real-estate-for-sale/' : '/real-estate-to-rent/';
+  if (city) path += city + '/';
+
+  let params = [];
+  if (min) params.push('price_min=' + min);
+  if (max) params.push('price_max=' + max);
+
+  let url = 'https://www.bazaraki.com' + path;
+  if (params.length) url += '?' + params.join('&');
+
+  window.open(url, '_blank');
+});
+</script>
+</body>
+</html>
